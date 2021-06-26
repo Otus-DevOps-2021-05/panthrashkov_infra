@@ -15,10 +15,10 @@ https://console.cloud.yandex.ru/
    
 3. Создали vm bastion
 ![img_1.png](img_1.png)
-   Публичный ip = 178.154.207.35 (BASTION_IP=178.154.207.35)
+   Публичный ip = 178.154.200.159 (BASTION_IP=178.154.200.159)
    
 4. Подключение по публичному ip
-   ssh -i ~/.ssh/appuser appuser@178.154.207.35
+   ssh -i ~/.ssh/appuser appuser@1178.154.200.159
  ок - Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-42-generic x86_64) ...
    cat /etc/issue
  ok -  Ubuntu 20.04.2 LTS \n \l
