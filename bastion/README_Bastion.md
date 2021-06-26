@@ -66,8 +66,12 @@ ok -  total 16
 ssh -J appuser@$BASTION_IP appuser@$SOMEINTERNALHOST_IP
 
 12. Настраиваем VPN
+    https://computingforgeeks.com/install-and-configure-pritunl-vpn-server-on-ubuntu/
+    репозиторий взять отсюда https://docs.pritunl.com/docs/repo
+    
+    sudo pritunl setup-key
     cat <<EOF> setupvpn.sh
-
+```bash
 #!/bin/bash
 > echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" > /etc/apt/sources.list.d/mongodb-org-4.4.list
 > echo "deb http://repo.pritunl.com/stable/apt focal main" > /etc/apt/sources.list.d/pritunl.list
@@ -80,6 +84,11 @@ ssh -J appuser@$BASTION_IP appuser@$SOMEINTERNALHOST_IP
 > systemctl start pritunl mongod
 > systemctl enable pritunl mongod
 > EOF
-
+```
 sudo bash setupvpn.sh
 
+11. Настройка vpn и получение файла конфигурации.
+    Запуск клиента  sudo openvpn cloud-bastion.ovpn
+    test с PIN 6214157507237678334670591556762
+12. Проверьте возможность подключения к someinternalhost свашего компьютера после подключения к VPN:
+    ssh -i ~/.ssh/appuser appuser@10.128.0.18
