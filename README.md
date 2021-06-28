@@ -11,6 +11,6 @@ someinternalhost_IP=10.128.0.18
 ssh -J appuser@$bastion_IP appuser@$someinternalhost_IP
 
 # Деплой тестового приложения
-testapp_IP=178.154.253.27
-testapp_port=9292
+testapp_IP = 178.154.253.27
+testapp_port = 9292
 
