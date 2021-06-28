@@ -104,3 +104,9 @@ ps aux | grep puma
 output  -yc-user   3611  0.5  1.3 516716 26704 ?        Sl   21:28   0:00 puma 3.10.0 (tcp://0.0.0.0:9292) [reddit]
 log in application and make post
 ![img.png](img.png)
+
+Make scripts
+make files executables
+```bash
+git update-index --chmod=+x path/to/file
+```
