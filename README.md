@@ -10,5 +10,7 @@ someinternalhost_IP=10.128.0.18
 # проверить  работоспособностьнайденного решения и внести его в README.md в вашем репозитории
 ssh -J appuser@$bastion_IP appuser@$someinternalhost_IP
 
-
+# Деплой тестового приложения
+testapp_IP=178.154.253.27
+testapp_port=9292
 
