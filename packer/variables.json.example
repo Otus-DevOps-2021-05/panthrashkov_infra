@@ -1,5 +1,5 @@
 {
     "FOLDER_ID": "b1gaeis0eu1b5lcjtuts",
     "IMAGE_FAMILY": "reddit-base",
-    "SERVICE_ACCOUNT_KEY_FILE": "/home/alex/IdeaProjects/infra-secret/key.json"
+    "SERVICE_ACCOUNT_KEY_FILE": "key.json"
 }
