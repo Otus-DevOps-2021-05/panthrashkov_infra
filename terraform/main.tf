@@ -8,7 +8,7 @@ provider "yandex" {
 
 resource "yandex_compute_instance" "app" {
   name        = "reddit-app"
-  platform_id = "standard-v2"
+  platform_id = "standard-v1"
   zone        = var.yandex_compute_instanse_zone
 
   resources {
@@ -29,7 +29,7 @@ resource "yandex_compute_instance" "app" {
 
   network_interface {
     # Указан id подсети default-ru-central1-a
-    subnet_id = var.subnet_id
+    subnet_id = "${yandex_vpc_subnet.app-subnet.id}"
     nat       = true
   }
 
@@ -50,4 +50,15 @@ resource "yandex_compute_instance" "app" {
   provisioner "remote-exec" {
     script = "files/deploy.sh"
   }
+}
+
+resource "yandex_vpc_network" "app-network" {
+  name = "reddit-app-network"
+}
+
+resource "yandex_vpc_subnet" "app-subnet" {
+  name           = "reddit-app-subnet"
+  zone           = var.zone
+  network_id     = "${yandex_vpc_network.app-network.id}"
+  v4_cidr_blocks = ["192.168.10.0/28"]
 }
