@@ -1,0 +1,27 @@
+{
+  "builders": [
+    {
+      "type": "yandex",
+      "service_account_key_file": "{{user `SERVICE_ACCOUNT_KEY_FILE`}}",
+      "folder_id": "{{user `FOLDER_ID`}}",
+      "source_image_family": "ubuntu-1604-lts",
+      "image_name": "reddit-base-{{timestamp}}",
+      "image_family": "{{user `IMAGE_FAMILY`}}",
+      "ssh_username": "ubuntu",
+      "platform_id": "standard-v2",
+      "use_ipv4_nat": true,
+      "subnet_id": "e9b91dc4efd7ghd6kmho"
+
+    }
+  ],
+  "provisioners": [
+    {
+      "pause_before": "3s",
+      "pause_after": "3s",
+      "type": "shell",
+      "script": "scripts/install_ruby.sh",
+      "execute_command": "sudo {{.Path}}"
+    }
+  ]
+}
+
