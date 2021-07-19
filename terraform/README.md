@@ -83,3 +83,28 @@ Outputs:
 external_ip_address_app = 193.32.219.89
 external_ip_address_db = 193.32.218.95
 
+21. use module instead simple separate files
+terraform/modules/db
+terraform/modules/app
+
+22. add modules in main file, use module block and terraform get  command to init modules
+check that modules initialized
+    cat .terraform/modules/modules.json
+    output -
+    {"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"app","Source":"./modules/app","Dir":"modules/app"},
+    {"Key":"db","Source":"./modules/db","Dir":"modules/db"}]}
+    
+23. subnet_id moved to variable (e9b94uuh3jgme9qok7vc) and created by hand
+24. create vm using modules
+    external_ip_address_app = 193.32.219.97
+    external_ip_address_db = 178.154.241.29
+    
+25. try to connect 
+ssh ubuntu@193.32.219.97
+ssh ubuntu@178.154.241.29
+    
+26. create prod and stage forlder with configuration for run modules for different environment
+
+
+
+    
