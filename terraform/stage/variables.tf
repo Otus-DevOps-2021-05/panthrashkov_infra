@@ -1,3 +1,18 @@
+variable app_disk_image {
+  description = "Disk image for reddit app"
+  default     = "reddit-app-base"
+}
+
+variable db_disk_image {
+  description = "Disk image for db"
+  default     = "reddit-db-base"
+}
+
+variable yandex_backed_name {
+  description = "Terraform object storage name"
+  default     = "terraform-object-storage-tutorial"
+}
+
 variable cloud_id {
   description = "Cloud"
 }
