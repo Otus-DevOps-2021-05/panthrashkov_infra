@@ -8,11 +8,11 @@ ansible --version
    output
    ansible 2.9.6
 3. Run 2 VM from terraform 2 homework
-   external_ip_address_app = 178.154.200.136
-   external_ip_address_db = 84.201.129.68
+   external_ip_address_app = 130.193.49.61
+   external_ip_address_db = 130.193.38.232
   
 4. Create inventory file with host app
-   appserver ansible_host=178.154.200.136 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
+   appserver ansible_host=130.193.49.61 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
 5. Check ansible can connect to our host
    ansible appserver -i ./inventory -m ping
 output
@@ -24,7 +24,7 @@ output
    "ping": "pong"
    }
 6. Create inventory file with host db
-   dbserver ansible_host=84.201.129.68 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
+   dbserver ansible_host=130.193.38.232 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
 7. Check ansible can connect to our host (use module ping)
    ansible dbserver -i ./inventory -m ping
    output
@@ -36,8 +36,8 @@ output
    "ping": "pong"
    }
 8. Create  ansible.cfg to store common settings and remove that data from invetory file
-   appserver ansible_host=178.154.200.136
-   dbserver ansible_host=84.201.129.68 
+   appserver ansible_host=130.193.49.61
+   dbserver ansible_host=130.193.38.232 
    
 9. User ansible module command, to check connectivity
    ansible dbserver -m command -a uptime
@@ -177,5 +177,91 @@ PLAY RECAP *********************************************************************
 appserver                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
 
 exist changed task because we remove repository by hand, and clone work again
-27. 
 
+**End first homework**
+
+### **Start second homework**
+
+27. Create playbook to deploy our application reddit_app.yml playbook contains one task to copy 
+    mongod config file from template 
+    use module template
+    use j2 template file (templates/mongodconf.j2)
+    before run create our vm with terraform apply (stage environment) and change ips
+    run playbook with --check option and only on hosts in db group
+    ```ansible
+    ansible-playbook reddit_app.yml --check --limit db
+    ```
+28. Error
+    TASK [Change mongo db config file] ***********************************************************************************************************************************************************************************************************
+    fatal: [dbserver]: FAILED! => {"changed": false, "msg": "AnsibleUndefinedVariable: 'mongo_bind_ip' is undefined"}
+    
+29. Add variable mongo_bind_ip into playbook block vars
+    ok output -
+    PLAY RECAP ***********************************************************************************************************************************************************************************************************************************
+    dbserver                   : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+
+30. Use handler to restart mongod after success reconfig to reddit_app.yml playbook
+    run playbook with --check option and only on hosts in db group
+    ```ansible
+    ansible-playbook reddit_app.yml --check --limit db
+    ```
+    
+31. Run without check to apply our config 
+output ok
+    PLAY RECAP ***********************************************************************************************************************************************************************************************************************************
+    dbserver                   : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+32. Add new two task to config app server and one handler
+first task use module copy to copy startup script
+second task use module systemd to run startup script
+handler use use module systemd to restart service puma
+33. Use db_config file to pass database url to application server
+add new task to copy db_config file to application server
+34. Add variable db_host in vars block
+35. Run playbook with check option on app servers group and only for tasks with app-tag
+    ansible-playbook reddit_app.yml --check --limit app --tags app-tag
+    output ok
+    PLAY RECAP ***********************************************************************************************************************************************************************************************************************************
+    appserver                  : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+36. run without --check option (use user ubuntu on application server)
+
+37. Add new task to install git clone repo and setup bundler
+38. try connect to reddit - ok
+![img.png](img/app1.png)
+
+39. One playbook many plays - change to separate playbooks in one file reddit_app2
+First playbook for config db host
+Second playbook for config app host
+Third playbook for deploy app to app host
+Use tags on playbook level
+    
+40. Remove vm and create it clean again
+    terraform destroy
+    terraform apply -auto-approve=false
+41. Change ip settings
+42. run playbook tree times with different tags
+    ansible-playbook reddit_app2.yml --tags db-tag
+    ansible-playbook reddit_app2.yml --tags app-tag
+    ansible-playbook reddit_app2.yml --tags deploy-tag
+    
+43. Application works http://130.193.49.61:9292/
+
+44. Split playbooks to different files
+app.yml
+db.yml
+deploy.yml
+
+and copy suitable plays from reddit_app_multiple_plays.yml. Remove tags because they don't needed anymore.
+45. Create main playbook (site.yml) and import other playbook there
+46. Recreate vm with terraform and change ip
+47. Run main playbook
+    ansible-playbook site.yml --check
+    ansible-playbook site.yml
+48. Application works
+![img.png](img/app2.png)
+   
+49.  Use ansible provisioners for packer
+create provisiones packer_app.yml packer_db.yml
+     
+50. Replace provisioners in packer/app.json and packer/db.json
+51. Create new images
+    packer build  -var-file=packer/variables.json ./packer/db.json

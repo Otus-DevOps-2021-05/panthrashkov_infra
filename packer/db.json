@@ -10,17 +10,9 @@
       "ssh_username": "ubuntu",
       "platform_id": "standard-v2",
       "use_ipv4_nat": true,
-      "subnet_id": "e9b91dc4efd7ghd6kmho"
+      "subnet_id": "e9b94uuh3jgme9qok7vc"
     }
   ],
-  "provisioners": [
-    {
-      "type": "shell",
-      "script": "scripts/install_mongodb.sh",
-      "execute_command": "sudo {{.Path}}",
-      "pause_before": "3s",
-      "pause_after": "3s"
-    }
-  ]
+  "provisioners": [    {"type": "ansible","playbook_file": "ansible/packer_db.yml"    }]
 }
 
