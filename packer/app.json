@@ -10,18 +10,10 @@
       "ssh_username": "ubuntu",
       "platform_id": "standard-v2",
       "use_ipv4_nat": true,
-      "subnet_id": "e9b91dc4efd7ghd6kmho"
+      "subnet_id": "e9b94uuh3jgme9qok7vc"
 
     }
   ],
-  "provisioners": [
-    {
-      "pause_before": "3s",
-      "pause_after": "3s",
-      "type": "shell",
-      "script": "scripts/install_ruby.sh",
-      "execute_command": "sudo {{.Path}}"
-    }
-  ]
+  "provisioners": [    {"type": "ansible","playbook_file": "ansible/packer_app.yml"    }]
 }
 
