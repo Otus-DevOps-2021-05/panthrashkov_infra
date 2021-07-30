@@ -8,11 +8,11 @@ ansible --version
    output
    ansible 2.9.6
 3. Run 2 VM from terraform 2 homework
-   external_ip_address_app = 130.193.49.61
-   external_ip_address_db = 130.193.38.232
+   external_ip_address_app = 178.154.222.66
+   external_ip_address_db = 178.154.222.155
   
 4. Create inventory file with host app
-   appserver ansible_host=130.193.49.61 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
+   appserver ansible_host=178.154.222.66 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
 5. Check ansible can connect to our host
    ansible appserver -i ./inventory -m ping
 output
@@ -24,7 +24,7 @@ output
    "ping": "pong"
    }
 6. Create inventory file with host db
-   dbserver ansible_host=130.193.38.232 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
+   dbserver ansible_host=178.154.222.155 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
 7. Check ansible can connect to our host (use module ping)
    ansible dbserver -i ./inventory -m ping
    output
@@ -36,8 +36,8 @@ output
    "ping": "pong"
    }
 8. Create  ansible.cfg to store common settings and remove that data from invetory file
-   appserver ansible_host=130.193.49.61
-   dbserver ansible_host=130.193.38.232 
+   appserver ansible_host=178.154.222.66
+   dbserver ansible_host=178.154.222.155
    
 9. User ansible module command, to check connectivity
    ansible dbserver -m command -a uptime
@@ -243,7 +243,7 @@ Use tags on playbook level
     ansible-playbook reddit_app2.yml --tags app-tag
     ansible-playbook reddit_app2.yml --tags deploy-tag
     
-43. Application works http://130.193.49.61:9292/
+43. Application works http://178.154.222.66:9292/
 
 44. Split playbooks to different files
 app.yml
@@ -259,9 +259,63 @@ and copy suitable plays from reddit_app_multiple_plays.yml. Remove tags because 
 48. Application works
 ![img.png](img/app2.png)
    
-49.  Use ansible provisioners for packer
+49. Use ansible provisioners for packer
 create provisiones packer_app.yml packer_db.yml
      
 50. Replace provisioners in packer/app.json and packer/db.json
 51. Create new images
     packer build  -var-file=packer/variables.json ./packer/db.json
+
+**End second homework**
+
+### **Start third homework**
+52. Create standart role layout using command
+    ansible-galaxy init
+53. Move tasks to folder task, handlers to folder handlers and so on
+54. add role to db.yml and app.yml
+55. Terraform recreate vm, change ip, and run playbook
+56. Check app - http://178.154.222.66:9292/ - ok
+57. Create environment stage and prod in ansible
+58. Change ansible.cfg default inventory path
+59. Create group_vars for prod and stage
+60. Add debug task to roles for print environment variable
+61. Move files to playbooks folder and old folder, change path in packer files
+62. Change .cfg file
+63. Terraform recreate vm, change ip, and run playbook
+64. Run playbook ansible-playbook playbooks/site.yml
+65. Do 63 to 64 for prod ansible-playbook -i environments/prod/inventory playbooks/site.yml
+
+66. Use community role jdauphant.nginx
+67. Add requirements.yml with src
+68. install role ansible-galaxy install -r environments/stage/requirements.yml
+output
+- downloading role 'nginx', owned by jdauphant
+- downloading role from https://github.com/jdauphant/ansible-role-nginx/archive/v2.21.1.tar.gz
+- extracting jdauphant.nginx to /home/alex/IdeaProjects/panthrashkov_infra/ansible/roles/jdauphant.nginx
+- jdauphant.nginx (v2.21.1) was installed successfully
+68. add role jdauphant.nginx to app.yml
+69. run playbook and check app on port 80 - ok
+![](img/img.png)
+70. Work with ansible vault
+71. Create file vault.key and add this file to gitignore
+72. create playbook users.yml
+73. Create credentials.yml for stage and prod
+74. encrypt credentials with key
+ansible-vault encrypt environments/prod/credentials.yml
+ansible-vault encrypt environments/stage/credentials.yml
+result
+$ANSIBLE_VAULT;1.1;AES256
+39616266626533393163306436363431373061666236303936333138326532666439376562383966 .....
+75. add user.yml to roles in sity
+76. Deploy app and create users ansible-playbook site.yml
+77. Check that user is created
+ssh qauser@84.252.130.86
+qauser@84.252.130.86's password:
+Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-142-generic x86_64)
+
+
+
+
+
+
+

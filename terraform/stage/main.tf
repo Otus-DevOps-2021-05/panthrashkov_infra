@@ -6,9 +6,9 @@ provider "yandex" {
   zone                     = var.zone
 }
 
-resource "yandex_storage_bucket" "terraform-object-storage-tutorial" {
-  bucket = var.yandex_backed_name
-}
+//resource "yandex_storage_bucket" "terraform-object-storage-tutorial" {
+//  bucket = var.yandex_backed_name
+//}
 
 
 module "app" {

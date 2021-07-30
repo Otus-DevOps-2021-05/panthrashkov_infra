@@ -13,6 +13,6 @@
       "subnet_id": "e9b94uuh3jgme9qok7vc"
     }
   ],
-  "provisioners": [    {"type": "ansible","playbook_file": "ansible/packer_db.yml"    }]
+  "provisioners": [    {"type": "ansible","playbook_file": "ansible/playbooks/packer_db.yml"    }]
 }
 
