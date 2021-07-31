@@ -10,7 +10,7 @@ ansible --version
 3. Run 2 VM from terraform 2 homework
    external_ip_address_app = 178.154.222.66
    external_ip_address_db = 178.154.222.155
-  
+
 4. Create inventory file with host app
    appserver ansible_host=178.154.222.66 ansible_user=ubuntu ansible_private_key_file=~/.ssh/appuser
 5. Check ansible can connect to our host
@@ -38,7 +38,7 @@ output
 8. Create  ansible.cfg to store common settings and remove that data from invetory file
    appserver ansible_host=178.154.222.66
    dbserver ansible_host=178.154.222.155
-   
+
 9. User ansible module command, to check connectivity
    ansible dbserver -m command -a uptime
    ansible appserver -m command -a uptime
@@ -48,11 +48,11 @@ output
 10. Create group of host in inventory file
 11. User groups to make some change on hosts
     ansible app -m ping
-    
+
 12. Use yaml format to inventory
 13. Check yaml inventory to conneectivity
     ansible all -m ping -i inventory.yml
-    
+
 14. Check is ruby installed on app server
     ansible app -m command -a 'ruby -v'
     output
@@ -96,7 +96,7 @@ Jul 20 12:23:47 fhm3itgsbarggluugg4l systemd[1]: Started High-performance, schem
     },
     "changed": false,
     "name": "mongod", ...
-    
+
 20. Use same check with module service
     ansible db -m service -a name=mongod
     output
@@ -118,7 +118,7 @@ Jul 20 12:23:47 fhm3itgsbarggluugg4l systemd[1]: Started High-performance, schem
     "msg": "Failed to find required executable git in paths: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
 
 need install git
-to install write simple playbook 
+to install write simple playbook
 - name: Install git
   hosts: app
   become: true
@@ -128,7 +128,7 @@ to install write simple playbook
       name: git
       state: present
       update_cache: yes
-      
+
 run play book ansible-playbook apt_install_git.yml
 output
 appserver                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
@@ -157,7 +157,7 @@ output
     "remote_url_changed": false
     }
 changed false
-    
+
 23. Use same thing with command
     ansible app -m command -a 'git clone https://github.com/express42/reddit.git /home/appuser/reddit'
 output appserver | FAILED | rc=128 >>
@@ -165,16 +165,16 @@ output appserver | FAILED | rc=128 >>
 
 24. Try same thing use playbook clone.yml (added become to playbook)
 output
-    appserver                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+    appserver                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 25. Remove reddit repository from app servers
     ansible app -m command -a 'rm -rf ~/reddit'
-    
+
 26. run clone again
     TASK [Clone repo] *************************************************************************************************************************************************************************************************************************
     changed: [appserver]
 
 PLAY RECAP ********************************************************************************************************************************************************************************************************************************
-appserver                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+appserver                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
 exist changed task because we remove repository by hand, and clone work again
 
@@ -182,8 +182,8 @@ exist changed task because we remove repository by hand, and clone work again
 
 ### **Start second homework**
 
-27. Create playbook to deploy our application reddit_app.yml playbook contains one task to copy 
-    mongod config file from template 
+27. Create playbook to deploy our application reddit_app.yml playbook contains one task to copy
+    mongod config file from template
     use module template
     use j2 template file (templates/mongodconf.j2)
     before run create our vm with terraform apply (stage environment) and change ips
@@ -194,22 +194,22 @@ exist changed task because we remove repository by hand, and clone work again
 28. Error
     TASK [Change mongo db config file] ***********************************************************************************************************************************************************************************************************
     fatal: [dbserver]: FAILED! => {"changed": false, "msg": "AnsibleUndefinedVariable: 'mongo_bind_ip' is undefined"}
-    
+
 29. Add variable mongo_bind_ip into playbook block vars
     ok output -
     PLAY RECAP ***********************************************************************************************************************************************************************************************************************************
-    dbserver                   : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+    dbserver                   : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
 30. Use handler to restart mongod after success reconfig to reddit_app.yml playbook
     run playbook with --check option and only on hosts in db group
     ```ansible
     ansible-playbook reddit_app.yml --check --limit db
     ```
-    
-31. Run without check to apply our config 
+
+31. Run without check to apply our config
 output ok
     PLAY RECAP ***********************************************************************************************************************************************************************************************************************************
-    dbserver                   : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+    dbserver                   : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 32. Add new two task to config app server and one handler
 first task use module copy to copy startup script
 second task use module systemd to run startup script
@@ -221,7 +221,7 @@ add new task to copy db_config file to application server
     ansible-playbook reddit_app.yml --check --limit app --tags app-tag
     output ok
     PLAY RECAP ***********************************************************************************************************************************************************************************************************************************
-    appserver                  : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+    appserver                  : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 36. run without --check option (use user ubuntu on application server)
 
 37. Add new task to install git clone repo and setup bundler
@@ -233,7 +233,7 @@ First playbook for config db host
 Second playbook for config app host
 Third playbook for deploy app to app host
 Use tags on playbook level
-    
+
 40. Remove vm and create it clean again
     terraform destroy
     terraform apply -auto-approve=false
@@ -242,7 +242,7 @@ Use tags on playbook level
     ansible-playbook reddit_app2.yml --tags db-tag
     ansible-playbook reddit_app2.yml --tags app-tag
     ansible-playbook reddit_app2.yml --tags deploy-tag
-    
+
 43. Application works http://178.154.222.66:9292/
 
 44. Split playbooks to different files
@@ -258,10 +258,10 @@ and copy suitable plays from reddit_app_multiple_plays.yml. Remove tags because 
     ansible-playbook site.yml
 48. Application works
 ![img.png](img/app2.png)
-   
+
 49. Use ansible provisioners for packer
 create provisiones packer_app.yml packer_db.yml
-     
+
 50. Replace provisioners in packer/app.json and packer/db.json
 51. Create new images
     packer build  -var-file=packer/variables.json ./packer/db.json
@@ -312,6 +312,80 @@ $ANSIBLE_VAULT;1.1;AES256
 ssh qauser@84.252.130.86
 qauser@84.252.130.86's password:
 Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-142-generic x86_64)
+
+**End third homework**
+
+### **Start fourth homework**
+78. Setup virtualbox, disable secure boot to run
+(https://askubuntu.com/questions/777308/virtualbox-problem-kernel-module-is-not-loaded%22)
+https://wiki.ubuntu.com/UEFI/SecureBoot/DKMS
+79. Setup vagrant
+80. create vagrantfile with two vw
+81. run vagrant up to create vm
+82. check box list
+vagrant box list
+output - ubuntu/xenial64 (virtualbox, 20210721.0.0)
+83. check vm status
+vagrant status
+output
+Current machine states:
+dbserver                  running (virtualbox)
+appserver                 running (virtualbox)
+84. Connect to vm
+vagrant ssh appserver
+from appserver - ping -c 2 10.10.10.10
+85. Add ansible provisioner db to Vagrantfile
+86. Reconfigure vm
+vagrant provision dbserver
+87. Add playbook to insall python base.yml
+88. Add base.yml to role site.yml
+89. Add install mongodb to db tasks
+90. allow_unauthenticated = yes for install db
+91. Check is db ok from appserver
+telnet 10.10.10.10 27017
+92. Add install task to app tasks
+93. Add ansible provisioner db to Vagrantfile
+94. For info look to generated inventory file from vagrant
+cat .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
+95. Apply provision to appserver
+vagrant provision appserver
+96. Add variable to deploy user for app
+97. Change config file to j2 template
+98. Add to vagrant provision
+      ansible.extra_vars = {
+        "deploy_user" => "ubuntu"
+      }
+99. Run provisioner vagrant
+100. Check application works http://10.10.10.20:9292/
+101. Destroy vm
+vagrant destroy -f
+Recreate
+vagrant up
+check app is ok
+then destroy
+
+102. Setup molecule (version molecule==2.22 testinfra==3.0.6) to use homework scripts
+pip3 install -r requirements.txt
+
+103. Copy test to molecule/default/test_default.py
+104. create molecule
+molecule create
+105. Check is created
+molecule list
+106. Login to molecule instance
+molecule login -h instance - ok
+107. Edit playbook.yml
+108. Run playbook
+molecule converge
+109. Run test
+molecule verify
+    ========================= 2 passed, 1 warning in 0.82s =========================
+Verifier completed successfully.
+110. Change packer ansible playbook  and run
+packer build -var-file=packer/variables.json ./packer/app.json
+packer build -var-file=packer/variables.json ./packer/db.json
+
+
 
 
 
