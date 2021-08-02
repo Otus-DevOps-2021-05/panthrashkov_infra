@@ -13,6 +13,10 @@
       "subnet_id": "e9b94uuh3jgme9qok7vc"
     }
   ],
-  "provisioners": [    {"type": "ansible","playbook_file": "ansible/playbooks/packer_db.yml"    }]
+  "provisioners": [{"type": "ansible", "playbook_file": "ansible/playbooks/db.yml",
+  "extra_arguments": ["--tags","install"],
+  "ansible_env_vars": ["ANSIBLE_ROLES_PATH={{ pwd }}/ansible/roles"] }]
+
+
 }
 
